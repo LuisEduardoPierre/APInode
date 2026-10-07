@@ -1,9 +1,9 @@
 //import http from "http";
 
-import app from "./src/app.js";
+import APP from "./src/app.js";
 
 const PORT = 3000;
 
-app.listen(PORT, () => {
+APP.listen(PORT, () => {
     console.log("Server running on port 3000");
 });
