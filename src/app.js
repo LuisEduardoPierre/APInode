@@ -1,4 +1,15 @@
 import express from 'express';
+import connectDatabase from './config/dbConnect.js';
+
+const CONNECTION = await connectDatabase();
+
+CONNECTION.on("error", (error) => {
+    console.error("Error in connection", error)
+});
+
+CONNECTION.once("open", () =>{
+    console.log("Connection successfully done")
+})
 
 const APP = express();
 APP.use(express.json());
@@ -51,3 +62,4 @@ APP.delete('/book/:id', (req, res) => {
 });
 
 export default APP;
+
