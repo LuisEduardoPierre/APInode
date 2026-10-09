@@ -15,11 +15,5 @@ CONNECTION.once("open", () =>{
 const APP = express();
 ROUTES(APP);
 
-APP.delete('/book/:id', (req, res) => {
-    const index = getBookById(req.params.id);
-    LIVROS.splice(index, 1);
-    res.status(200).send("Book deleted");
-});
-
 export default APP;
 

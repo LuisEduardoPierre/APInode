@@ -7,6 +7,7 @@ const BOOK_SCHEMA = new mongoose.Schema({
     publisher: { type: String},
     price: { type: Number },
     pages: { type: Number },
+    
 
 }, {versionKey: false});
 
