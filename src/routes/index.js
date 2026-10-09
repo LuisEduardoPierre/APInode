@@ -6,8 +6,7 @@ const ROUTES = (app) => {
 
     app.route("/").get((req,res) => res.status(200).send("Generic Route"));
 
-    app.use(express.json(), books);
-    app.use(express.json(), authors);
+    app.use(express.json(), books, authors);
 };
 
 export default ROUTES;
