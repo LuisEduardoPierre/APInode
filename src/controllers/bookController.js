@@ -3,7 +3,7 @@ import BOOK from "../models/book.js";
 
 class BookController{
 
-    static async books (req,res){
+    static async books (req,res) {
         try {
             const BOOKS_LIST = await BOOK.find({});
             res.status(200).json(BOOKS_LIST);
@@ -13,7 +13,7 @@ class BookController{
             
     }
 
-    static async findBookById (req,res){
+    static async findBookById (req,res) {
         try {
             const ID = req.params.id;
             const BOOK = await BOOK.findById(ID);
@@ -24,7 +24,7 @@ class BookController{
             
     }
 
-    static async addBook (req,res){
+    static async addBook (req,res) {
         const NEW_BOOK = req.body;
 
         try {
@@ -38,7 +38,7 @@ class BookController{
         
     }
 
-    static async updateBook (req,res){
+    static async updateBook (req,res) {
         try {
             const ID = req.params.id;
             await BOOK.findByIdAndUpdate(ID, req.body);
@@ -49,7 +49,7 @@ class BookController{
             
     }
 
-    static async deleteBook (req,res){
+    static async deleteBook (req,res) {
         try {
             const ID = req.params.id;
             await BOOK.findByIdAndRemove(ID);
@@ -58,6 +58,22 @@ class BookController{
            res.status(500).json({message: `${err.message} - failed to delete the book`}) 
         }
             
+    }
+
+    static async getBooksByPublisher(req, res){
+
+        const PUBLISHER = req.query.publisher;
+
+        try{
+
+            const BOOKS_BY_PUBLISHER = await BOOK.find({ publisher: PUBLISHER });
+
+            res.status(200).json(BOOKS_BY_PUBLISHER);
+
+        }catch(err){
+            
+            res.status(500).json({message: `${err.message} - failed to fetch the publishers`});
+        }
     }
 
 }
