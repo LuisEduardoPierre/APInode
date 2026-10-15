@@ -1,66 +1,63 @@
-import { AUTHOR } from "../models/author.js";
 import BOOK from "../models/book.js";
 
 class BookController{
 
-  static async books (req,res) {
+  static async books (req,res,next) {
     try {
       const BOOKS_LIST = await BOOK.find({});
       res.status(200).json(BOOKS_LIST);
     } catch(err) {
-      res.status(500).json({message: `${err.message} - failed to fecth the books`}) 
+      next(err);
     }
             
   }
 
-  static async findBookById (req,res) {
+  static async findBookById (req,res,next) {
     try {
       const ID = req.params.id;
       const BOOK = await BOOK.findById(ID);
       res.status(200).json(BOOK);
     } catch(err) {
-      res.status(500).json({message: `${err.message} - failed to fetch the book`}) 
+      next(err);
     }
             
   }
 
-  static async addBook (req,res) {
+  static async addBook (req,res,next) {
     const NEW_BOOK = req.body;
 
     try {
-      const FINDED_AUTHOR =  await AUTHOR.findById(NEW_BOOK.AUTHOR);
-      const COMPLETE_BOOK = { ...NEW_BOOK, AUTHOR: { ...FINDED_AUTHOR._doc}}
-      const CREATED_BOOK = await BOOK.create(COMPLETE_BOOK)
+      const CREATED_BOOK = await BOOK.create(NEW_BOOK)
       res.status(201).json({message: "Created successfully", book: CREATED_BOOK});
     } catch(err) {
-      res.status(500).json({message: `${err.message} - failed to create a new book`});
+      next(err);
     }
         
   }
 
-  static async updateBook (req,res) {
+  static async updateBook (req,res,next) {
     try {
       const ID = req.params.id;
-      await BOOK.findByIdAndUpdate(ID, req.body);
+      await BOOK.findByIdAndUpdate(ID, req.body, { runValidators: true });
       res.status(200).json({message: "Update runned successfully"});
     } catch(err) {
-      res.status(500).json({message: `${err.message} - failed to update the book`}) 
+      next(err);
     }
             
   }
 
-  static async deleteBook (req,res) {
+  static async deleteBook (req,res,next) {
     try {
       const ID = req.params.id;
       await BOOK.findByIdAndRemove(ID);
       res.status(200).json({message: "Delete runned successfully"});
     } catch(err) {
-      res.status(500).json({message: `${err.message} - failed to delete the book`}) 
+      next(err);
     }
             
   }
 
-  static async getBooksByPublisher(req, res){
+  static async getBooksByPublisher(req, res, next){
 
     const PUBLISHER = req.query.publisher;
 
@@ -72,7 +69,7 @@ class BookController{
 
     }catch(err){
             
-      res.status(500).json({message: `${err.message} - failed to fetch the publishers`});
+      next(err);
     }
   }
 

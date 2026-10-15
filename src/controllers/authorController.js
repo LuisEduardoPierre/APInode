@@ -1,19 +1,19 @@
-import mongoose from 'mongoose'
+
 import { AUTHOR } from "../models/author.js";
 
 class AuthorController{
 
-  static async authors (req,res){
+  static async authors (req,res,next){
     try {
       const AUTHORS_LIST = await AUTHOR.find({});
       res.status(200).json(AUTHORS_LIST);
     } catch(err) {
-      res.status(500).json({message: `${err.message} - failed to fecth the authors`}) 
+      next(err);
     }
             
   }
 
-  static async findAuthorById (req,res){
+  static async findAuthorById (req,res, next){
     try {
       const ID = req.params.id;
 
@@ -25,44 +25,39 @@ class AuthorController{
       }
       
     } catch(err) {
-      if (err instanceof mongoose.Error.CastError){
-        res.status(400).send({message: "Some informed data are incorrect"})
-      } else {
-        res.status(500).send({message: "Internal server error"})
-      }
-      
+      next(err)
     }
             
   }
 
-  static async addAuthor (req,res){
+  static async addAuthor (req,res, next){
     try {
       const NEW_AUTHOR = await AUTHOR.create(req.body);
       res.status(201).json({message: "Created successfully", book: NEW_AUTHOR});
     } catch(err) {
-      res.status(500).json({message: `${err.message} - failed to create a new author`});
+      next(err);
     }
         
   }
 
-  static async updateAuthor (req,res){
+  static async updateAuthor (req,res, next){
     try {
       const ID = req.params.id;
-      await AUTHOR.findByIdAndUpdate(ID, req.body);
+      await AUTHOR.findByIdAndUpdate(ID, req.body, { runValidators: true });
       res.status(200).json({message: "Update runned successfully"});
     } catch(err) {
-      res.status(500).json({message: `${err.message} - failed to update the author`}) 
+      next(err); 
     }
             
   }
 
-  static async deleteAuthor (req,res){
+  static async deleteAuthor (req,res, next){
     try {
       const ID = req.params.id;
       await AUTHOR.findByIdAndRemove(ID);
       res.status(200).json({message: "Delete runned successfully"});
     } catch(err) {
-      res.status(500).json({message: `${err.message} - failed to delete the author`}) 
+      next(err);
     }
             
   }

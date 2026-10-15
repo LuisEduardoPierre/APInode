@@ -1,14 +1,13 @@
 import mongoose from "mongoose";
-import { AUTHOR_SCHEMA } from "./author.js";
 
 
 const BOOK_SCHEMA = new mongoose.Schema({
   id: { type: mongoose.Schema.Types.ObjectId },
-  title: { type: String, required: true },
-  publisher: { type: String},
+  title: { type: String, required: [true, "The title of the book is a required field"] },
+  publisher: { type: String, required: "The publisher name is a required field"},
   price: { type: Number },
   pages: { type: Number },
-  author: AUTHOR_SCHEMA
+  author: {type: mongoose.Schema.Types.ObjectId, ref: "authors", required: [true, "The author is a required field"]}
 
 
 }, {versionKey: false});
