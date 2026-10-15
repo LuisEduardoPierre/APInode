@@ -2,6 +2,7 @@ import express from 'express';
 import connectDatabase from './config/dbConnect.js';
 import ROUTES from './routes/index.js';
 import errorHandler from "./middlewares/errorHandler.js";
+import Handler404 from "./middlewares/404Handler.js"
 
 const CONNECTION = await connectDatabase();
 
@@ -16,6 +17,8 @@ CONNECTION.once("open", () =>{
 const APP = express();
 APP.use(express.json())
 ROUTES(APP);
+
+APP.use(Handler404);
 
 // eslint-disable-next-line no-unused-vars
 APP.use(errorHandler);
